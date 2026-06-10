@@ -1,7 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import SecuritySettingsView from "./SecuritySettingsView";
 
 interface ClientSettingsViewProps {
   emailPrefs: {
@@ -16,20 +17,50 @@ export default function ClientSettingsView({
   emailPrefs,
   handleEmailPrefsChange
 }: ClientSettingsViewProps) {
+  const [activeTab, setActiveTab] = useState<"profile" | "security">("profile");
+
   return (
-    <motion.div
-      key="sub-settings"
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.25 }}
-      className="bg-[#0f0e22] border border-slate-900 rounded-3xl p-6 sm:p-8 space-y-8"
-      id="client-settings-view-container"
-    >
-      <div>
-        <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">Security & Profile Coordination</h3>
-        <p className="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed">Configure automated matching coordinates and escrow authentication factors.</p>
+    <div className="space-y-6">
+      {/* Settings Sub-Tab Option Switcher */}
+      <div className="flex border-b border-slate-900 bg-[#070614]/80 p-1 rounded-2xl max-w-md">
+        <button
+          onClick={() => setActiveTab("profile")}
+          className={`flex-1 py-3 text-xs sm:text-sm font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer border-none ${
+            activeTab === "profile" 
+              ? "bg-[#5b4dff] text-white shadow-lg shadow-[#5b4dff]/20" 
+              : "text-slate-400 hover:text-white bg-transparent"
+          }`}
+        >
+          Company Profile
+        </button>
+        <button
+          onClick={() => setActiveTab("security")}
+          className={`flex-1 py-3 text-xs sm:text-sm font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer border-none ${
+            activeTab === "security" 
+              ? "bg-[#5b4dff] text-white shadow-lg shadow-[#5b4dff]/20" 
+              : "text-slate-400 hover:text-white bg-transparent"
+          }`}
+        >
+          Security & 2FA
+        </button>
       </div>
+
+      {activeTab === "security" ? (
+        <SecuritySettingsView />
+      ) : (
+        <motion.div
+          key="sub-settings"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.25 }}
+          className="bg-[#0f0e22] border border-slate-900 rounded-3xl p-6 sm:p-8 space-y-8"
+          id="client-settings-view-container"
+        >
+          <div>
+            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">Security & Profile Coordination</h3>
+            <p className="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed">Configure automated matching coordinates and escrow authentication factors.</p>
+          </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-slate-900">
         <div className="space-y-2">
@@ -139,5 +170,7 @@ export default function ClientSettingsView({
         </button>
       </div>
     </motion.div>
+  )}
+</div>
   );
 }

@@ -104,6 +104,10 @@ class ResilientDB {
     return items;
   }
 
+  async all(table: string) {
+    return this.select(table);
+  }
+
   async single(table: string, id: string, idField = "uid") {
     if (isSupabaseConfigured()) {
       try {

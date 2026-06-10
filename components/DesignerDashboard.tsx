@@ -35,6 +35,7 @@ import ProjectDetailsView from "./ProjectDetailsView";
 import DBAPlatformIntelligence from "./DBAPlatformIntelligence";
 import { generateDesignerPdfReport } from "../lib/pdfGenerator";
 import ReportPreviewModal from "./ReportPreviewModal";
+import SecuritySettingsView from "./SecuritySettingsView";
 
 interface DesignerDashboardProps {
   setActiveTab: (tab: any) => void;
@@ -75,6 +76,7 @@ export default function DesignerDashboard({
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSubTab, setActiveSubTab] = useState<"dashboard" | "projects" | "portfolio" | "earnings" | "messages" | "settings">("dashboard");
   const [isAddingPortfolio, setIsAddingPortfolio] = useState(false);
+  const [designerSettingsTab, setDesignerSettingsTab] = useState<"profile" | "security">("profile");
   
   // New Portfolio Form State
   const [newPortfolioTitle, setNewPortfolioTitle] = useState("");
@@ -1148,125 +1150,155 @@ export default function DesignerDashboard({
 
             {/* SUB-VIEW 6: SETTINGS */}
             {activeSubTab === "settings" && (
-              <motion.div
-                key="designer-tab-settings"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="bg-[#0f0e22] border border-slate-900 rounded-3xl p-6 sm:p-8 space-y-8"
-              >
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">Studio Profile & Notification Coordination</h3>
-                  <p className="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed">Configure your design studio availability, connected bank escrow gates, and instant update preferences.</p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-slate-900">
-                  <div className="space-y-2">
-                    <label className="text-xs sm:text-sm font-bold uppercase text-slate-400 tracking-wider block font-mono">Registered Studio Name</label>
-                    <input 
-                      type="text" 
-                      defaultValue={`${profile?.displayName || "Amara Okafor"} Creative Ltd`} 
-                      className="w-full bg-[#080715] border border-slate-800 rounded-xl px-4 py-3 text-sm sm:text-base text-slate-200 outline-none focus:border-[#5b4dff]"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-xs sm:text-sm font-bold uppercase text-slate-400 tracking-wider block font-mono">Operations Country / Regional Hub</label>
-                    <input 
-                      type="text" 
-                      defaultValue="Lagos, Nigeria" 
-                      className="w-full bg-[#080715] border border-slate-800 rounded-xl px-4 py-3 text-sm sm:text-base text-slate-200 outline-none focus:border-[#5b4dff]"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-xs sm:text-sm font-bold uppercase text-slate-400 tracking-wider block font-mono">Liaison Notification Email</label>
-                    <input 
-                      type="email" 
-                      defaultValue="amara@okafor.design" 
-                      className="w-full bg-[#080715] border border-slate-800 rounded-xl px-4 py-3 text-sm sm:text-base text-slate-200 outline-none focus:border-[#5b4dff]"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-xs sm:text-sm font-bold uppercase text-slate-400 tracking-wider block font-mono">M-Pesa / Mobile Payout Gateway</label>
-                    <input 
-                      type="text" 
-                      readOnly 
-                      defaultValue="mpesa_live_payout_gateway_active" 
-                      className="w-full bg-[#080715]/40 border border-slate-900 text-slate-500 rounded-xl px-4 py-3 text-sm sm:text-base font-mono outline-none cursor-not-allowed"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-5">
-                  <h4 className="text-base sm:text-lg font-black text-white">Escrow, Availability & Matching Preferences</h4>
-                  <div className="space-y-4">
-                    {[
-                      { title: "Direct Brief Instant Smart-Matching", desc: "Instantly allow open briefs matching your primary tags (Branding, Illustration) to be auto-accepted as proposals." },
-                      { title: "Escrow Multi-Sig Milestone Approvals", desc: "Require secure cryptographic hash checks when submitting final designs to trigger fast milestone releases." },
-                      { title: "Public Directory Visibility Boost", desc: "Opt-in to allow regional agencies and global partners to search for and view your profile elements on top search indices." }
-                    ].map((pref, idx) => (
-                      <label key={idx} className="flex items-start gap-4 cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          defaultChecked
-                          className="rounded border-slate-802 bg-[#080715] text-[#5b4dff] focus:ring-0 focus:ring-offset-0 w-5 h-5 cursor-pointer mt-0.5"
-                        />
-                        <div className="space-y-1">
-                          <span className="text-sm sm:text-base font-bold text-slate-200 group-hover:text-white transition-colors">{pref.title}</span>
-                          <p className="text-xs sm:text-xs text-slate-400 leading-normal">{pref.desc}</p>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-5 border-t border-slate-900 pt-6">
-                  <h4 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-[#5b4dff] rounded-full" />
-                    <span>Email Notification Settings & Opt-In</span>
-                  </h4>
-                  <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">Select which milestone approvals and workspace messages are immediately delivered to your contact email address.</p>
-                  
-                  <div className="space-y-4 mt-2">
-                    {[
-                      { key: "messages", title: "Instant Messaging & Active Huddle Request", desc: "Receive immediate notifications when clients send a message thread or initiate an active alignment whiteboard huddle." },
-                      { key: "matchingBriefs", title: "Smart-Match Priority Direct Job Invites", desc: "Get notified immediately when the DesignBridge vetting match router finds a job brief looking for your specific skills." },
-                      { key: "milestones", title: "Milestone Sign-Offs & Immediate Payment Release", desc: "Get real-time notification when a client locks funds into escrow or signs off on your final workspace design deliverables." }
-                    ].map((pref) => (
-                      <label key={pref.key} className="flex items-start gap-4 cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          checked={designerEmailPrefs[pref.key as keyof typeof designerEmailPrefs]}
-                          onChange={() => handleDesignerEmailPrefsChange(pref.key as any)}
-                          className="rounded border-slate-802 bg-[#080715] text-[#5b4dff] focus:ring-0 focus:ring-offset-0 w-5 h-5 cursor-pointer mt-0.5"
-                        />
-                        <div className="space-y-1">
-                          <span className="text-sm sm:text-base font-bold text-slate-200 group-hover:text-white transition-colors flex flex-wrap items-center gap-2.5">
-                            <span>{pref.title}</span>
-                            {designerEmailPrefs[pref.key as keyof typeof designerEmailPrefs] ? (
-                              <span className="text-[10px] bg-emerald-500/15 text-emerald-400 uppercase font-mono px-3 py-0.5 rounded-full font-black tracking-tight">Opted In</span>
-                            ) : (
-                              <span className="text-[10px] bg-red-500/10 text-red-400 uppercase font-mono px-3 py-0.5 rounded-full font-black tracking-tight">Opted Out</span>
-                            )}
-                          </span>
-                          <p className="text-xs sm:text-xs text-slate-400 leading-normal">{pref.desc}</p>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex justify-end pt-4">
-                  <button 
-                    onClick={() => alert("Studio profile credentials & instant email settings saved successfully! Your parameters are verified across the regional registry.")}
-                    className="bg-[#5b4dff] hover:bg-[#7546ff] text-white text-xs sm:text-sm font-black px-6 py-3.5 rounded-xl transition-all shadow-lg cursor-pointer uppercase tracking-wider"
+              <div className="space-y-6">
+                {/* Switcher tabs */}
+                <div className="flex border-b border-slate-900 bg-[#070614]/80 p-1 rounded-2xl max-w-md">
+                  <button
+                    onClick={() => setDesignerSettingsTab("profile")}
+                    className={`flex-1 py-3 text-xs sm:text-sm font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer border-none ${
+                      designerSettingsTab === "profile" 
+                        ? "bg-[#5b4dff] text-white shadow-lg shadow-[#5b4dff]/20" 
+                        : "text-slate-400 hover:text-white bg-transparent"
+                    }`}
                   >
-                    Save Changes
+                    Studio Profile
+                  </button>
+                  <button
+                    onClick={() => setDesignerSettingsTab("security")}
+                    className={`flex-1 py-3 text-xs sm:text-sm font-black uppercase tracking-wider rounded-xl transition-all cursor-pointer border-none ${
+                      designerSettingsTab === "security" 
+                        ? "bg-[#5b4dff] text-white shadow-lg shadow-[#5b4dff]/20" 
+                        : "text-slate-400 hover:text-white bg-transparent"
+                    }`}
+                  >
+                    Security & 2FA
                   </button>
                 </div>
-              </motion.div>
+
+                {designerSettingsTab === "security" ? (
+                  <SecuritySettingsView />
+                ) : (
+                  <motion.div
+                    key="designer-tab-settings"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="bg-[#0f0e22] border border-slate-900 rounded-3xl p-6 sm:p-8 space-y-8"
+                  >
+                    <div>
+                      <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">Studio Profile & Notification Coordination</h3>
+                      <p className="text-xs sm:text-sm text-slate-400 mt-2 leading-relaxed">Configure your design studio availability, connected bank escrow gates, and instant update preferences.</p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-slate-900">
+                      <div className="space-y-2">
+                        <label className="text-xs sm:text-sm font-bold uppercase text-slate-400 tracking-wider block font-mono">Registered Studio Name</label>
+                        <input 
+                          type="text" 
+                          defaultValue={`${profile?.displayName || "Amara Okafor"} Creative Ltd`} 
+                          className="w-full bg-[#080715] border border-slate-800 rounded-xl px-4 py-3 text-sm sm:text-base text-slate-200 outline-none focus:border-[#5b4dff]"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs sm:text-sm font-bold uppercase text-slate-400 tracking-wider block font-mono">Operations Country / Regional Hub</label>
+                        <input 
+                          type="text" 
+                          defaultValue="Lagos, Nigeria" 
+                          className="w-full bg-[#080715] border border-slate-800 rounded-xl px-4 py-3 text-sm sm:text-base text-slate-200 outline-none focus:border-[#5b4dff]"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs sm:text-sm font-bold uppercase text-slate-400 tracking-wider block font-mono">Liaison Notification Email</label>
+                        <input 
+                          type="email" 
+                          defaultValue="amara@okafor.design" 
+                          className="w-full bg-[#080715] border border-slate-800 rounded-xl px-4 py-3 text-sm sm:text-base text-slate-200 outline-none focus:border-[#5b4dff]"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs sm:text-sm font-bold uppercase text-slate-400 tracking-wider block font-mono">M-Pesa / Mobile Payout Gateway</label>
+                        <input 
+                          type="text" 
+                          readOnly 
+                          defaultValue="mpesa_live_payout_gateway_active" 
+                          className="w-full bg-[#080715]/40 border border-slate-900 text-slate-500 rounded-xl px-4 py-3 text-sm sm:text-base font-mono outline-none cursor-not-allowed"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-5">
+                      <h4 className="text-base sm:text-lg font-black text-white">Escrow, Availability & Matching Preferences</h4>
+                      <div className="space-y-4">
+                        {[
+                          { title: "Direct Brief Instant Smart-Matching", desc: "Instantly allow open briefs matching your primary tags (Branding, Illustration) to be auto-accepted as proposals." },
+                          { title: "Escrow Multi-Sig Milestone Approvals", desc: "Require secure cryptographic hash checks when submitting final designs to trigger fast milestone releases." },
+                          { title: "Public Directory Visibility Boost", desc: "Opt-in to allow regional agencies and global partners to search for and view your profile elements on top search indices." }
+                        ].map((pref, idx) => (
+                          <label key={idx} className="flex items-start gap-4 cursor-pointer group">
+                            <input
+                              type="checkbox"
+                              defaultChecked
+                              className="rounded border-slate-802 bg-[#080715] text-[#5b4dff] focus:ring-0 focus:ring-offset-0 w-5 h-5 cursor-pointer mt-0.5"
+                            />
+                            <div className="space-y-1">
+                              <span className="text-sm sm:text-base font-bold text-slate-200 group-hover:text-white transition-colors">{pref.title}</span>
+                              <p className="text-xs sm:text-xs text-slate-400 leading-normal">{pref.desc}</p>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-5 border-t border-slate-900 pt-6">
+                      <h4 className="text-base sm:text-lg font-black text-white flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 bg-[#5b4dff] rounded-full" />
+                        <span>Email Notification Settings & Opt-In</span>
+                      </h4>
+                      <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">Select which milestone approvals and workspace messages are immediately delivered to your contact email address.</p>
+                      
+                      <div className="space-y-4 mt-2">
+                        {[
+                          { key: "messages", title: "Instant Messaging & Active Huddle Request", desc: "Receive immediate notifications when clients send a message thread or initiate an active alignment whiteboard huddle." },
+                          { key: "matchingBriefs", title: "Smart-Match Priority Direct Job Invites", desc: "Get notified immediately when the DesignBridge vetting match router finds a job brief looking for your specific skills." },
+                          { key: "milestones", title: "Milestone Sign-Offs & Immediate Payment Release", desc: "Get real-time notification when a client locks funds into escrow or signs off on your final workspace design deliverables." }
+                        ].map((pref) => (
+                          <label key={pref.key} className="flex items-start gap-4 cursor-pointer group">
+                            <input
+                              type="checkbox"
+                              checked={designerEmailPrefs[pref.key as keyof typeof designerEmailPrefs]}
+                              onChange={() => handleDesignerEmailPrefsChange(pref.key as any)}
+                              className="rounded border-slate-802 bg-[#080715] text-[#5b4dff] focus:ring-0 focus:ring-offset-0 w-5 h-5 cursor-pointer mt-0.5"
+                            />
+                            <div className="space-y-1">
+                              <span className="text-sm sm:text-base font-bold text-slate-200 group-hover:text-white transition-colors flex flex-wrap items-center gap-2.5">
+                                <span>{pref.title}</span>
+                                {designerEmailPrefs[pref.key as keyof typeof designerEmailPrefs] ? (
+                                  <span className="text-[10px] bg-emerald-500/15 text-emerald-400 uppercase font-mono px-3 py-0.5 rounded-full font-black tracking-tight">Opted In</span>
+                                ) : (
+                                  <span className="text-[10px] bg-red-500/10 text-red-400 uppercase font-mono px-3 py-0.5 rounded-full font-black tracking-tight">Opted Out</span>
+                                )}
+                              </span>
+                              <p className="text-xs sm:text-xs text-slate-400 leading-normal">{pref.desc}</p>
+                            </div>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end pt-4">
+                      <button 
+                        onClick={() => alert("Studio profile credentials & instant email settings saved successfully! Your parameters are verified across the regional registry.")}
+                        className="bg-[#5b4dff] hover:bg-[#7546ff] text-white text-xs sm:text-sm font-black px-6 py-3.5 rounded-xl transition-all shadow-lg cursor-pointer uppercase tracking-wider"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
             )}
               </>
             )}

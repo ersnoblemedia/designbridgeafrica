@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { DESIGNERS } from "../lib/data";
 import { Designer } from "../types";
+import { resilientDB } from "../lib/supabase";
 
 interface BrowseDesignersProps {
   setSelectedDesigner: (d: Designer) => void;
@@ -60,6 +61,59 @@ export default function BrowseDesigners({
 
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory === "All" ? "All Talents" : initialCategory);
   const [designersList, setDesignersList] = useState<Designer[]>(DESIGNERS);
+
+  // Sync / load registered designers from the database
+  useEffect(() => {
+    const unsub = resilientDB.subscribe("users", (usersData) => {
+      try {
+        if (usersData && usersData.length > 0) {
+          const dbDesigners: Designer[] = usersData
+            .filter((u: any) => u.role === "Designer" || u.role === "designer")
+            .map((u: any) => ({
+              id: u.uid || `d_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+              name: u.displayName || "Anonymous Designer",
+              avatar: u.photoURL || `https://api.dicebear.com/7.x/pixel-art/svg?seed=${u.uid || 'def'}`,
+              title: u.title || "Vetted Designer Specialist",
+              city: u.city || u.location?.split(",")[0]?.trim() || "Lagos",
+              country: u.country || u.location?.split(",")[1]?.trim() || "Nigeria",
+              rating: u.rating || 5.0,
+              completedJobs: u.completedJobs || 0,
+              skills: u.skills || ["Branding", "UI/UX Design", "Illustration"],
+              bio: u.bio || "Crafting professional visual bridge infrastructure for enterprises globally.",
+              featuredProjectImg: u.featuredProjectImg || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80",
+              portfolioItems: u.portfolioItems || [],
+              availability: u.availability || "Available Now",
+              recentlyActiveMinutes: u.recentlyActiveMinutes || 10,
+              responseTimeHours: u.responseTimeHours || 0.1,
+              activeJobs: u.activeJobs || 0,
+              experienceYears: u.experienceYears || 5,
+              industries: u.industries || ["Enterprises", "Cultural Branding"],
+              designStyles: u.designStyles || ["Geometric Minimalism"],
+              complexityLevel: u.complexityLevel || "Clean & Modern",
+              talentType: u.talentType || "individual"
+            }));
+
+          // Merge without overriding existing matching ones to support visual previews gracefully
+          const combined = [...DESIGNERS];
+          dbDesigners.forEach((dbD) => {
+            if (!combined.some(d => d.id === dbD.id || d.name.toLowerCase() === dbD.name.toLowerCase())) {
+              combined.unshift(dbD); // insert newly joined designers at top
+            }
+          });
+          setDesignersList(combined);
+        } else {
+          setDesignersList(DESIGNERS);
+        }
+      } catch (err) {
+        console.error("Failed to load and sync DB designers:", err);
+        setDesignersList(DESIGNERS);
+      }
+    });
+
+    return () => {
+      if (typeof unsub === "function") unsub();
+    };
+  }, []);
   
   // Custom filter selections based on design screenshots
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);

@@ -32,6 +32,7 @@ import PostBriefModal from "../components/PostBriefModal";
 import OnboardingWizardModal from "../components/OnboardingWizardModal";
 import AccountCompletionModal from "../components/AccountCompletionModal";
 import BackToTop from "../components/BackToTop";
+import TwoFactorChallenge from "../components/TwoFactorChallenge";
 import { 
   AboutPage, CareersPage, BlogPage, ContactPage, CommunityPage, 
   HelpPage, GuidelinesPage, ApiDocsPage, PrivacyPage, TermsPage, CookiePage 
@@ -500,6 +501,8 @@ export default function DesignBridgeAfrica() {
       />
 
       <AccountCompletionModal />
+
+      <TwoFactorChallenge />
 
       <BackToTop />
 
