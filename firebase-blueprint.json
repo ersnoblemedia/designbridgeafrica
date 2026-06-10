@@ -1,0 +1,164 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "The user profile document containing verification state and system roles",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "The unique Firebase Authentication UID"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User email address"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User displayed name"
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "User profile photo URL"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["Client", "Designer", "Admin"],
+          "description": "The workspace active role"
+        },
+        "portfolioUrl": {
+          "type": "string",
+          "description": "Portfolio URL or website link"
+        },
+        "location": {
+          "type": "string",
+          "description": "City or Country location of the creative"
+        },
+        "bio": {
+          "type": "string",
+          "description": "A short bio or introductory paragraph"
+        },
+        "accountCompleted": {
+          "type": "boolean",
+          "description": "True if the profile setup wizard has been successfully completed"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the profile was registered"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The timestamp when the profile was updated"
+        }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "JobBrief": {
+      "title": "Job Brief",
+      "description": "A customized brief or project proposal listed inside DesignBridge",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique project identifier"
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the design brief"
+        },
+        "company": {
+          "type": "string",
+          "description": "The organization listing this brief"
+        },
+        "budget": {
+          "type": "integer",
+          "description": "Estimated budget in USD"
+        },
+        "location": {
+          "type": "string",
+          "description": "Location restriction or Remote status"
+        },
+        "category": {
+          "type": "string",
+          "description": "Creative genre (eg: 3D Art, UI/UX, Packaging)"
+        },
+        "skillsNeeded": {
+          "type": "array",
+          "description": "Required competencies"
+        },
+        "description": {
+          "type": "string",
+          "description": "Full specifications of requirements"
+        },
+        "proposals": {
+          "type": "integer",
+          "description": "Count of submissions"
+        },
+        "creatorId": {
+          "type": "string",
+          "description": "The Uploader UID"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Listing date"
+        }
+      },
+      "required": ["id", "title", "budget", "category", "creatorId"]
+    },
+    "Finances": {
+      "title": "Finances Database",
+      "description": "User financial summary including balance, pending payments, lifetime earnings, invoices list, cards, and transaction records",
+      "type": "object",
+      "properties": {
+        "balance": {
+          "type": "number",
+          "description": "Current available balance"
+        },
+        "pendingPayments": {
+          "type": "number",
+          "description": "Total pending or locked escrow budget"
+        },
+        "totalPaid": {
+          "type": "number",
+          "description": "Total lifetime established payout earnings"
+        },
+        "invoices": {
+          "type": "array",
+          "description": "Active invoices"
+        },
+        "cards": {
+          "type": "array",
+          "description": "Saved credit card methods"
+        },
+        "transactions": {
+          "type": "array",
+          "description": "Ledger history"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last updated timestamp"
+        }
+      },
+      "required": ["balance", "pendingPayments", "totalPaid", "invoices", "cards", "transactions"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Designers, Clients and Administrators registered on the platform"
+    },
+    "/jobs/{jobId}": {
+      "schema": "JobBrief",
+      "description": "Open and filled design job lists"
+    },
+    "/finances/{userId}": {
+      "schema": "Finances",
+      "description": "User financial portfolio and escrow contracts"
+    }
+  }
+}

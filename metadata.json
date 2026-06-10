@@ -1,0 +1,6 @@
+{
+  "name": "DesignBridge Africa",
+  "description": "Vetted creative marketplace and premium design coordination ecosystem for African talent",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

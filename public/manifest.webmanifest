@@ -1,0 +1,23 @@
+{
+  "name": "DesignBridge Africa",
+  "short_name": "DesignBridge",
+  "description": "Vetted creative marketplace and premium design coordination ecosystem for African talent",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d0c1d",
+  "theme_color": "#5b4dff",
+  "icons": [
+    {
+      "src": "https://api.dicebear.com/7.x/identicon/png?seed=designbridge&backgroundColor=5b4dff",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://api.dicebear.com/7.x/identicon/png?seed=designbridge&backgroundColor=5b4dff",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
