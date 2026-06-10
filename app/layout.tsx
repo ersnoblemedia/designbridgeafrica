@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   title: 'DesignBridge Africa',
   description: 'Vetted creative marketplace and premium design coordination ecosystem for African talent',
   manifest: '/manifest.webmanifest',
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
