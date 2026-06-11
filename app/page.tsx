@@ -507,70 +507,70 @@ export default function DesignBridgeAfrica() {
       <BackToTop />
 
       {/* Mobile Bottom Navigation Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden bg-[#090818]/95 backdrop-blur-xl border-t border-slate-900 shadow-2xl px-2 py-2">
-        <div className="flex items-center justify-around max-w-md mx-auto">
+      <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-[#090818]/95 backdrop-blur-xl border-t border-slate-900 shadow-2xl py-1 px-0.5 pb-[calc(4px+env(safe-area-inset-bottom,0px))]">
+        <div className={`grid ${user ? "grid-cols-6" : "grid-cols-5"} w-full max-w-md mx-auto items-center justify-items-center gap-0.5`}>
           
           {/* Home Tab */}
           <button 
             onClick={() => { setActiveTab("home"); setSelectedDesigner(null); }}
-            className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none ${activeTab === "home" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
+            className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "home" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
           >
-            <Home className="w-5 h-5" />
-            <span className="text-[9px] font-bold tracking-tight">Home</span>
+            <Home className="w-[18px] h-[18px]" />
+            <span className="text-[8px] min-[365px]:text-[8.5px] font-bold tracking-tight whitespace-nowrap">Home</span>
           </button>
-
+ 
           {/* Dashboard Tab (for logged in) */}
           {user && (
             <button 
               onClick={() => { setActiveTab("dashboard"); setSelectedDesigner(null); }}
-              className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none ${activeTab === "dashboard" ? "text-white font-black animate-pulse" : "text-slate-500 hover:text-slate-300"}`}
+              className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "dashboard" ? "text-white font-black animate-pulse" : "text-slate-500 hover:text-slate-300"}`}
             >
               <div className="relative">
-                <Layers className="w-5 h-5" />
+                <Layers className="w-[18px] h-[18px]" />
                 {userRole === "Client" && clientHasAlerts && (
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#8e6fff] border border-[#0d0c1d]" />
+                  <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-[#8e6fff] border border-[#0d0c1d]" />
                 )}
               </div>
-              <span className="text-[9px] font-bold tracking-tight font-sans">Dashboard</span>
+              <span className="text-[8px] min-[365px]:text-[8.5px] font-bold tracking-tight whitespace-nowrap">Dashboard</span>
             </button>
           )}
-
+ 
           {/* Designers Tab */}
           <button 
             onClick={() => { setActiveTab("designers"); setSelectedDesigner(null); }}
-            className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none ${activeTab === "designers" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
+            className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "designers" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
           >
-            <Compass className="w-5 h-5" />
-            <span className="text-[9px] font-bold tracking-tight">Creatives</span>
+            <Compass className="w-[18px] h-[18px]" />
+            <span className="text-[8px] min-[365px]:text-[8.5px] font-bold tracking-tight whitespace-nowrap">Creatives</span>
           </button>
-
+ 
           {/* Services/Deliverables Tab */}
           <button 
             onClick={() => { setActiveTab("services"); setSelectedDesigner(null); }}
-            className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none ${activeTab === "services" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
+            className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "services" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
           >
-            <Package className="w-5 h-5" />
-            <span className="text-[9px] font-bold tracking-tight">Services</span>
+            <Package className="w-[18px] h-[18px]" />
+            <span className="text-[8px] min-[365px]:text-[8.5px] font-bold tracking-tight whitespace-nowrap">Services</span>
           </button>
-
+ 
           {/* Briefs Tab */}
           <button 
             onClick={() => { setActiveTab("jobs"); setSelectedDesigner(null); }}
-            className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none ${activeTab === "jobs" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
+            className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "jobs" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
           >
-            <Briefcase className="w-5 h-5" />
-            <span className="text-[9px] font-bold tracking-tight">Briefs</span>
+            <Briefcase className="w-[18px] h-[18px]" />
+            <span className="text-[8px] min-[365px]:text-[8.5px] font-bold tracking-tight whitespace-nowrap">Briefs</span>
           </button>
-
+ 
           {/* Collab Tab */}
           <button 
             onClick={() => { setActiveTab("messaging"); setSelectedDesigner(null); }}
-            className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none ${activeTab === "messaging" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
+            className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "messaging" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
           >
-            <MessageSquare className="w-5 h-5" />
-            <span className="text-[9px] font-bold tracking-tight">Collab</span>
+            <MessageSquare className="w-[18px] h-[18px]" />
+            <span className="text-[8px] min-[365px]:text-[8.5px] font-bold tracking-tight whitespace-nowrap">Collab</span>
           </button>
-
+ 
         </div>
       </div>
 

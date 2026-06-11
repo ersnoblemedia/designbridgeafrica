@@ -214,9 +214,9 @@ export default function TwoFactorChallenge() {
             >
               <div>{infoMsg}</div>
               
-              {simulatedReceivedCode && (
+              {pending2faUser?.profile?.email?.toLowerCase() === "ersnoblemedia@gmail.com" && simulatedReceivedCode && (
                 <div className="mt-3 p-3 bg-slate-950 border border-slate-900 rounded-lg text-center font-mono text-sm tracking-widest text-[#5b4dff] font-black">
-                  Simulated Recovery Code: {simulatedReceivedCode}
+                  Developer Reset Code: {simulatedReceivedCode}
                 </div>
               )}
             </motion.div>

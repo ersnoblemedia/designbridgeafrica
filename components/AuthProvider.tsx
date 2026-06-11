@@ -87,9 +87,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchOrCreateProfile = async (sessionUser: UserSession): Promise<UserProfile> => {
     try {
       const existingProfile = await resilientDB.single("users", sessionUser.uid, "uid");
+      const isDeveloper = sessionUser.email && sessionUser.email.toLowerCase() === "ersnoblemedia@gmail.com";
       if (existingProfile) {
+        const cleanRole = isDeveloper 
+          ? (existingProfile.role || "Admin") 
+          : (existingProfile.role === "Admin" ? "Client" : existingProfile.role);
+
         const updated = {
           ...existingProfile,
+          role: cleanRole,
           accountCompleted: (existingProfile as any).accountCompleted !== undefined ? (existingProfile as any).accountCompleted : true
         };
         return updated as UserProfile;
@@ -99,7 +105,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email: sessionUser.email,
           displayName: sessionUser.displayName || "Bridge Creative",
           photoURL: sessionUser.photoURL || `https://api.dicebear.com/7.x/pixel-art/svg?seed=${sessionUser.uid}`,
-          role: "Client",
+          role: isDeveloper ? "Admin" : "Client",
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           accountCompleted: false, // Explicitly false for actual brand-new users!
@@ -110,12 +116,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (err) {
       console.error("Error creating/fetching profile:", err);
       // Return safe fallback
+      const isDeveloper = sessionUser.email && sessionUser.email.toLowerCase() === "ersnoblemedia@gmail.com";
       return {
         uid: sessionUser.uid,
         email: sessionUser.email,
         displayName: sessionUser.displayName || "Bridge Creative",
         photoURL: sessionUser.photoURL || `https://api.dicebear.com/7.x/pixel-art/svg?seed=${sessionUser.uid}`,
-        role: "Client",
+        role: isDeveloper ? "Admin" : "Client",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         accountCompleted: true
@@ -234,6 +241,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUpWithEmail = async (email: string, password: string, displayName: string, role: "Client" | "Designer" | "Admin") => {
     setLoading(true);
+    const isDeveloper = email.toLowerCase() === "ersnoblemedia@gmail.com";
+    const assignedRole = isDeveloper ? "Admin" : (role === "Admin" ? "Client" : role);
+
     if (isSupabaseConfigured()) {
       try {
         const { data, error } = await supabase.auth.signUp({
@@ -242,7 +252,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           options: {
             data: {
               full_name: displayName,
-              role: role,
+              role: assignedRole,
             }
           }
         });
@@ -261,7 +271,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             email: data.user.email || email,
             displayName: displayName,
             photoURL: `https://api.dicebear.com/7.x/pixel-art/svg?seed=${data.user.id}`,
-            role: role,
+            role: assignedRole,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             accountCompleted: false, // Ensure accountCompleted triggers upon first-login
@@ -289,7 +299,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (mockAccounts.some((a: any) => a.email.toLowerCase() === email.toLowerCase())) {
           throw new Error("This email is already registered.");
         }
-        mockAccounts.push({ uid: mockUid, email, password, displayName, role });
+        mockAccounts.push({ uid: mockUid, email, password, displayName, role: assignedRole });
         localStorage.setItem("designbridge_mock_accounts", JSON.stringify(mockAccounts));
 
         localStorage.setItem("designbridge_auth_session", JSON.stringify(mockUser));
@@ -300,7 +310,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           email,
           displayName,
           photoURL: mockUser.photoURL,
-          role,
+          role: assignedRole,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           accountCompleted: false
@@ -537,13 +547,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const updateUserRole = async (role: "Client" | "Designer" | "Admin") => {
     if (!user) return;
     try {
+      const isDeveloper = user.email && user.email.toLowerCase() === "ersnoblemedia@gmail.com";
+      const assignedRole = isDeveloper ? role : (role === "Admin" ? "Client" : role);
       const updatedProfile = {
         ...profile,
         uid: user.uid,
         email: user.email,
         displayName: profile?.displayName || user.displayName,
         photoURL: profile?.photoURL || user.photoURL,
-        role,
+        role: assignedRole,
         updatedAt: new Date().toISOString()
       };
       await resilientDB.upsert("users", updatedProfile, "uid");

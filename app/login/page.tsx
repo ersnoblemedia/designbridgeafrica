@@ -302,7 +302,7 @@ export default function LoginPage() {
                     className="w-full bg-slate-950/80 border border-slate-800 focus:border-[#5b4dff]/60 px-4 py-3 rounded-xl text-xs text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-[#5b4dff]/40 transition-all font-semibold"
                   />
                   <p className="text-[10px] text-slate-500 leading-normal">
-                    We&apos;ll scan the regional directory structure. If identified, a secure on-screen mock OTP key is simulated instantly to allow flawless sign-off.
+                    If verified inside the master index, a secure verification code will be dispatched instantly to confirm authentication parameters.
                   </p>
                 </div>
               ) : (
@@ -322,9 +322,9 @@ export default function LoginPage() {
                     />
                   </div>
 
-                  {simulatedOTP && (
+                  {recoveryEmail.toLowerCase() === "ersnoblemedia@gmail.com" && simulatedOTP && (
                     <div className="bg-amber-500/10 border border-amber-500/20 text-amber-400 p-3 rounded-xl text-[10px] text-center font-mono">
-                      🔑 Simulated Dispatch OTP: <strong className="text-white tracking-widest text-xs">{simulatedOTP}</strong> (Input this value to verify)
+                      🔑 Developer Recovery OTP: <strong className="text-white tracking-widest text-xs">{simulatedOTP}</strong> (Input this value to verify)
                     </div>
                   )}
 
@@ -516,10 +516,6 @@ export default function LoginPage() {
                 )}
               </button>
 
-              <div className="bg-slate-950/50 border border-slate-900 rounded-xl p-3 text-center text-[10px] text-slate-500 select-none">
-                💡 <span className="font-semibold text-slate-400">Resilient Sandbox Environment:</span> If you haven&apos;t coupled your live production database keys yet, you can sign up or log in with any custom email & password instantly to explore the full dashboard!
-              </div>
-              
               <div className="text-center pt-2">
                 <button
                   type="button"

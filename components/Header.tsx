@@ -453,34 +453,38 @@ export default function Header({
                 {/* Dropdown Portal */}
                 {showRoleDropdown && (
                   <div className="absolute right-0 mt-2 w-56 bg-[#100f24] border border-slate-800 rounded-xl shadow-2xl p-2 z-50 space-y-1">
-                    <div className="px-3 py-1.5 border-b border-slate-800/85">
-                      <span className="text-xs uppercase tracking-wider font-extrabold text-[#8e6fff] block">Switch Active Role</span>
-                      <p className="text-xs text-slate-450 text-slate-400 font-medium">Instantly update secure database settings</p>
-                    </div>
+                    {profile?.email?.toLowerCase() === "ersnoblemedia@gmail.com" && (
+                      <>
+                        <div className="px-3 py-1.5 border-b border-slate-800/85">
+                          <span className="text-xs uppercase tracking-wider font-extrabold text-[#8e6fff] block">Developer Controls</span>
+                          <p className="text-xs text-slate-400 font-medium">Instantly switch between workspace views</p>
+                        </div>
 
-                    <button 
-                      onClick={() => { updateUserRole("Client"); setShowRoleDropdown(false); }}
-                      className="w-full flex items-center justify-between text-left text-xs text-slate-300 hover:text-white hover:bg-[#151433] px-3 py-2 rounded-lg transition-colors cursor-pointer"
-                    >
-                      <span>Simulate Client Interface</span>
-                      {userRole === "Client" && <Check className="w-3.5 h-3.5 text-[#8e6fff]" />}
-                    </button>
-                    <button 
-                      onClick={() => { updateUserRole("Designer"); setShowRoleDropdown(false); }}
-                      className="w-full flex items-center justify-between text-left text-xs text-slate-300 hover:text-white hover:bg-[#151433] px-3 py-2 rounded-lg transition-colors cursor-pointer"
-                    >
-                      <span>Simulate Designer Interface</span>
-                      {userRole === "Designer" && <Check className="w-3.5 h-3.5 text-[#8e6fff]" />}
-                    </button>
-                    <button 
-                      onClick={() => { updateUserRole("Admin"); setShowRoleDropdown(false); }}
-                      className="w-full flex items-center justify-between text-left text-xs text-slate-300 hover:text-white hover:bg-[#151433] px-3 py-2 rounded-lg transition-colors cursor-pointer"
-                    >
-                      <span>Simulate Admin Interface</span>
-                      {userRole === "Admin" && <Check className="w-3.5 h-3.5 text-[#8e6fff]" />}
-                    </button>
+                        <button 
+                          onClick={() => { updateUserRole("Client"); setShowRoleDropdown(false); }}
+                          className="w-full flex items-center justify-between text-left text-xs text-slate-300 hover:text-white hover:bg-[#151433] px-3 py-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <span>Client Workspace View</span>
+                          {userRole === "Client" && <Check className="w-3.5 h-3.5 text-[#8e6fff]" />}
+                        </button>
+                        <button 
+                          onClick={() => { updateUserRole("Designer"); setShowRoleDropdown(false); }}
+                          className="w-full flex items-center justify-between text-left text-xs text-slate-300 hover:text-white hover:bg-[#151433] px-3 py-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <span>Designer Showcase View</span>
+                          {userRole === "Designer" && <Check className="w-3.5 h-3.5 text-[#8e6fff]" />}
+                        </button>
+                        <button 
+                          onClick={() => { updateUserRole("Admin"); setShowRoleDropdown(false); }}
+                          className="w-full flex items-center justify-between text-left text-xs text-slate-300 hover:text-white hover:bg-[#151433] px-3 py-2 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <span className="font-bold">Developer Console</span>
+                          {userRole === "Admin" && <Check className="w-3.5 h-3.5 text-[#8e6fff]" />}
+                        </button>
 
-                    <div className="border-t border-slate-800/85 my-1" />
+                        <div className="border-t border-slate-800/85 my-1" />
+                      </>
+                    )}
 
                     <button 
                       onClick={() => { logout(); setShowRoleDropdown(false); }}
@@ -495,20 +499,20 @@ export default function Header({
 
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <button 
                 onClick={() => router.push("/login?mode=signin")}
-                className="bg-[#0c0b1e]/60 border border-slate-850 hover:bg-slate-900/60 hover:border-slate-750 text-slate-300 hover:text-white text-xs font-bold px-3.5 py-2.5 rounded-full transition-all flex items-center gap-1.5 cursor-pointer"
+                className="bg-transparent sm:bg-[#0c0b1e]/60 border-none sm:border sm:border-slate-850 hover:bg-slate-900/60 hover:border-slate-750 text-slate-300 hover:text-white text-[11px] sm:text-xs font-bold px-1.5 py-1.5 sm:px-3.5 sm:py-2.5 rounded-full transition-all flex items-center gap-1 sm:gap-1.5 cursor-pointer shrink-0 whitespace-nowrap"
               >
-                <LogIn className="w-3.5 h-3.5 text-slate-400" />
-                <span>Sign In</span>
+                <LogIn className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#8e6fff] sm:text-slate-400 shrink-0" />
+                <span className="hidden sm:inline">Sign In</span>
               </button>
               <button 
                 onClick={() => router.push("/login?mode=signup")}
-                className="bg-[#5b4dff] hover:bg-[#6c5eff] active:scale-[0.98] text-white text-xs font-black px-4 py-2.5 rounded-full transition-all flex items-center gap-1.5 shadow-lg shadow-[#5b4dff]/20 cursor-pointer"
+                className="bg-transparent sm:bg-[#5b4dff] hover:bg-transparent sm:hover:bg-[#6c5eff] active:scale-[0.98] text-[#8e6fff] sm:text-white text-[11px] sm:text-xs font-black px-1.5 py-1.5 sm:px-4 sm:py-2.5 rounded-full transition-all flex items-center gap-1 sm:gap-1.5 shadow-none sm:shadow-lg sm:shadow-[#5b4dff]/20 cursor-pointer shrink-0 whitespace-nowrap border-none"
               >
-                <UserPlus className="w-3.5 h-3.5 text-white" />
-                <span>Sign Up</span>
+                <UserPlus className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[#8e6fff] sm:text-white shrink-0" />
+                <span className="hidden sm:inline">Sign Up</span>
               </button>
             </div>
           )}

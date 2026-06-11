@@ -1,9 +1,17 @@
 "use client";
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { useAuth } from "./AuthProvider";
+import { motion, AnimatePresence } from "framer-motion";
+
+const disciplines = [
+  "Creative Talent",
+  "UI/UX Designers",
+  "Brand Architects",
+  "3D Illustrators",
+  "Visual Innovators"
+];
 
 interface HeroSectionProps {
   setActiveTab: (tab: "home" | "designers" | "services" | "jobs" | "messaging" | "admin") => void;
@@ -12,6 +20,14 @@ interface HeroSectionProps {
 
 export default function HeroSection({ setActiveTab, setOnboardingStep }: HeroSectionProps) {
   const { user } = useAuth();
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % disciplines.length);
+    }, 3200);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLaunchCreativeZone = () => {
     if (!user) {
@@ -39,8 +55,23 @@ export default function HeroSection({ setActiveTab, setOnboardingStep }: HeroSec
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
-            Africa&apos;s Premium <span className="text-[#8e6fff]">Creative Talent</span> Marketplace
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.25] lg:leading-[1.12] tracking-tight">
+            <span>Africa&apos;s Premium </span>
+            <span className="inline-block text-[#8e6fff] relative whitespace-nowrap">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={index}
+                  initial={{ y: 15, opacity: 0, filter: "blur(4px)" }}
+                  animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                  exit={{ y: -15, opacity: 0, filter: "blur(4px)" }}
+                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                  className="bg-gradient-to-r from-[#8e6fff] via-[#ae9eff] to-[#5b4dff] bg-clip-text text-transparent inline-block py-1 pl-1 pr-4 whitespace-nowrap"
+                >
+                  {disciplines[index]}
+                </motion.span>
+              </AnimatePresence>
+            </span>
+            <span className="block min-[480px]:inline-block min-[480px]:ml-2"> Marketplace</span>
           </h1>
 
           <p className="text-base sm:text-lg text-slate-405 leading-relaxed max-w-2xl font-medium">

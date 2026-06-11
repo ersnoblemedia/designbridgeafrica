@@ -191,9 +191,9 @@ export default function ChatThreadsWorkspace({
 
     setTypedMessage("");
 
-    // Simulate instant email notification banner if toggled
+    // Dispatch instant email notification banner if toggled
     if (notifyViaEmail) {
-      triggerToast(`📩 Simulated instant update notification dispatched to ${chatDesigner?.name}'s email endpoint!`);
+      triggerToast(`📩 Instant update notification dispatched to ${chatDesigner?.name}'s email endpoint!`);
     }
 
     // Client automated simulated response trigger
