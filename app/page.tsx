@@ -77,12 +77,30 @@ export default function DesignBridgeAfrica() {
   const [selectedDesigner, setSelectedDesigner] = useState<Designer | null>(null);
   const [chatDesigner, setChatDesigner] = useState<Designer | null>(null);
 
+  // High-fidelity tactile vibration feedback helper to feel like a native app
+  const triggerVibration = (pattern: number | number[] = 15) => {
+    if (typeof window !== "undefined" && typeof navigator !== "undefined" && navigator.vibrate) {
+      try {
+        navigator.vibrate(pattern);
+      } catch (e) {
+        // Safe catch for sandbox boundaries that reject arbitrary hardware events
+      }
+    }
+  };
+
   React.useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const tab = params.get("tab");
       if (tab) {
         setActiveTab(tab);
+      }
+
+      // Self-register Service Worker for offline resilient PWA characteristics
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js")
+          .then((reg) => console.log("DesignBridge PWA Service Worker Registered with Scope: ", reg.scope))
+          .catch((err) => console.log("PWA Service Worker registration postponed: ", err));
       }
     }
   }, []);
@@ -514,7 +532,12 @@ export default function DesignBridgeAfrica() {
           
           {/* Home Tab */}
           <button 
-            onClick={() => { setActiveTab("home"); setSelectedDesigner(null); setShowMoreMenu(false); }}
+            onClick={() => { 
+              triggerVibration(12);
+              setActiveTab("home"); 
+              setSelectedDesigner(null); 
+              setShowMoreMenu(false); 
+            }}
             className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "home" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
           >
             <Home className="w-[18px] h-[18px]" />
@@ -524,7 +547,12 @@ export default function DesignBridgeAfrica() {
           {/* Dashboard Tab (for logged in) */}
           {user && (
             <button 
-              onClick={() => { setActiveTab("dashboard"); setSelectedDesigner(null); setShowMoreMenu(false); }}
+              onClick={() => { 
+                triggerVibration(12);
+                setActiveTab("dashboard"); 
+                setSelectedDesigner(null); 
+                setShowMoreMenu(false); 
+              }}
               className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "dashboard" ? "text-white font-black animate-pulse" : "text-slate-500 hover:text-slate-300"}`}
             >
               <div className="relative">
@@ -539,7 +567,12 @@ export default function DesignBridgeAfrica() {
  
           {/* Designers Tab */}
           <button 
-            onClick={() => { setActiveTab("designers"); setSelectedDesigner(null); setShowMoreMenu(false); }}
+            onClick={() => { 
+              triggerVibration(12);
+              setActiveTab("designers"); 
+              setSelectedDesigner(null); 
+              setShowMoreMenu(false); 
+            }}
             className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "designers" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
           >
             <Compass className="w-[18px] h-[18px]" />
@@ -548,7 +581,12 @@ export default function DesignBridgeAfrica() {
  
           {/* Services/Deliverables Tab */}
           <button 
-            onClick={() => { setActiveTab("services"); setSelectedDesigner(null); setShowMoreMenu(false); }}
+            onClick={() => { 
+              triggerVibration(12);
+              setActiveTab("services"); 
+              setSelectedDesigner(null); 
+              setShowMoreMenu(false); 
+            }}
             className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "services" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
           >
             <Package className="w-[18px] h-[18px]" />
@@ -557,7 +595,10 @@ export default function DesignBridgeAfrica() {
  
           {/* More Menu Drawer Trigger */}
           <button 
-            onClick={() => { setShowMoreMenu(!showMoreMenu); }}
+            onClick={() => { 
+              triggerVibration([15, 8]);
+              setShowMoreMenu(!showMoreMenu); 
+            }}
             className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${showMoreMenu ? "text-[#8e6fff] font-bold animate-pulse" : "text-slate-500 hover:text-slate-300"}`}
           >
             <Menu className="w-[18px] h-[18px]" />
@@ -576,29 +617,48 @@ export default function DesignBridgeAfrica() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setShowMoreMenu(false)}
+              onClick={() => {
+                triggerVibration(8);
+                setShowMoreMenu(false);
+              }}
               className="fixed inset-0 bg-[#04040c]/80 backdrop-blur-sm z-[90] lg:hidden"
             />
             
-            {/* Drawer Sheet */}
+            {/* Drawer Sheet with tactile vertical slide gesture swipe-to-dismiss */}
             <motion.div
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0.05, bottom: 0.85 }}
+              onDragEnd={(event, info) => {
+                // If pulled down far enough or fast enough, dismiss sheet
+                if (info.offset.y > 100 || info.velocity.y > 130) {
+                  triggerVibration(15);
+                  setShowMoreMenu(false);
+                }
+              }}
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 220 }}
-              className="fixed bottom-0 left-0 right-0 bg-[#0c0b1e]/98 border-t border-slate-900 rounded-t-[32px] p-6 pb-8 z-[100] lg:hidden shadow-[0_-15px_40px_rgba(0,0,0,0.8)] max-h-[85vh] overflow-y-auto"
+              transition={{ type: "spring", damping: 28, stiffness: 240 }}
+              className="fixed bottom-0 left-0 right-0 bg-[#0c0b1e]/98 border-t border-slate-900 rounded-t-[32px] p-6 pb-10 z-[100] lg:hidden shadow-[0_-15px_40px_rgba(0,0,0,0.85)] max-h-[85vh] overflow-y-auto select-none touch-none"
             >
               {/* iOS-style Swipe/Drag Handle Accent */}
-              <div className="w-12 h-1 bg-slate-800 rounded-full mx-auto mb-6" />
+              <div className="w-16 h-1.5 bg-slate-800 hover:bg-slate-700 active:bg-[#5b4dff] rounded-full mx-auto mb-6 transition-colors" />
               
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="text-sm font-black text-white tracking-tight">Ecosystem Explorer</h3>
+                  <h3 className="text-sm font-black text-white tracking-tight flex items-center gap-1.5">
+                    <span>Ecosystem Explorer</span>
+                    <span className="text-[9px] font-mono bg-slate-900 text-[#8e6fff] px-1.5 py-0.5 rounded-md border border-slate-850">PWA Link</span>
+                  </h3>
                   <p className="text-[10px] text-slate-400 font-semibold">Access extra system dashboards and coordination zones.</p>
                 </div>
                 <button 
-                  onClick={() => setShowMoreMenu(false)}
-                  className="w-8 h-8 rounded-full bg-slate-950 border border-slate-900 flex items-center justify-center text-slate-400 hover:text-white cursor-pointer"
+                  onClick={() => {
+                    triggerVibration(8);
+                    setShowMoreMenu(false);
+                  }}
+                  className="w-8 h-8 rounded-full bg-slate-950 border border-slate-900 flex items-center justify-center text-slate-400 hover:text-white cursor-pointer transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -609,6 +669,7 @@ export default function DesignBridgeAfrica() {
                 {/* 1. Briefs (Jobs) */}
                 <button
                   onClick={() => {
+                    triggerVibration(20);
                     setActiveTab("jobs");
                     setSelectedDesigner(null);
                     setShowMoreMenu(false);
@@ -630,6 +691,7 @@ export default function DesignBridgeAfrica() {
                 {/* 2. Collab messaging */}
                 <button
                   onClick={() => {
+                    triggerVibration(20);
                     setActiveTab("messaging");
                     setSelectedDesigner(null);
                     setShowMoreMenu(false);
@@ -652,6 +714,7 @@ export default function DesignBridgeAfrica() {
                 {user && (
                   <button
                     onClick={() => {
+                      triggerVibration(20);
                       setActiveTab("invoicing");
                       setSelectedDesigner(null);
                       setShowMoreMenu(false);
@@ -675,6 +738,7 @@ export default function DesignBridgeAfrica() {
                 {user && userRole === "Admin" && (
                   <button
                     onClick={() => {
+                      triggerVibration([25, 12]);
                       setActiveTab("admin");
                       setSelectedDesigner(null);
                       setShowMoreMenu(false);
