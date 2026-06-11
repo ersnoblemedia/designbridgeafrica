@@ -126,42 +126,42 @@ export default function HowItWorks() {
       </div>
 
       {/* TAB SELECTOR NAVIGATION BAR */}
-      <div className="flex justify-center">
-        <div className="bg-[#121124] border border-slate-900 rounded-2xl p-1 shrink-0 flex gap-1">
+      <div className="flex justify-center w-full px-4">
+        <div className="bg-[#121124] border border-slate-900 rounded-2xl p-1.5 flex flex-col sm:flex-row gap-1 w-full sm:w-auto">
           <button
             onClick={() => setActivePlaybookTab("layers")}
-            className={`px-4 sm:px-6 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
+            className={`px-4 sm:px-6 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-2 w-full sm:w-auto ${
               activePlaybookTab === "layers"
                 ? "bg-[#5b4dff] text-white shadow-xl"
                 : "text-slate-400 hover:text-white"
             }`}
           >
-            <Layers className="w-4 h-4" />
-            The 4-Layer Product Architecture
+            <Layers className="w-4 h-4 shrink-0" />
+            <span>The 4-Layer Product Architecture</span>
           </button>
           
           <button
             onClick={() => setActivePlaybookTab("hiring")}
-            className={`px-4 sm:px-6 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
+            className={`px-4 sm:px-6 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-2 w-full sm:w-auto ${
               activePlaybookTab === "hiring"
                 ? "bg-[#5b4dff] text-white shadow-xl"
                 : "text-slate-400 hover:text-white"
             }`}
           >
-            <UserCheck className="w-4 h-4" />
-            3 Hiring Paths
+            <UserCheck className="w-4 h-4 shrink-0" />
+            <span>3 Hiring Paths</span>
           </button>
 
           <button
             onClick={() => setActivePlaybookTab("revenue")}
-            className={`px-4 sm:px-6 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 ${
+            className={`px-4 sm:px-6 py-2.5 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-2 w-full sm:w-auto ${
               activePlaybookTab === "revenue"
-                ? "bg-[#5b4dff] text-white shadow-xl"
+                ? "bg-[#5b4dff] text-[#ffffff] shadow-xl"
                 : "text-slate-400 hover:text-white"
             }`}
           >
-            <TrendingUp className="w-4 h-4" />
-            5 Revenue Monetizations
+            <TrendingUp className="w-4 h-4 shrink-0" />
+            <span>5 Revenue Monetizations</span>
           </button>
         </div>
       </div>

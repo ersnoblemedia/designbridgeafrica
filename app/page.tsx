@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Lock, LogIn, ShieldAlert, Cpu, Sparkles, Sliders, Home, Compass, Package, Briefcase, MessageSquare, Layers } from "lucide-react";
+import { Lock, LogIn, ShieldAlert, Cpu, Sparkles, Sliders, Home, Compass, Package, Briefcase, MessageSquare, Layers, Menu, X, Coins } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../components/AuthProvider";
 import { useRouter } from "next/navigation";
 import { Designer, Job, ChatMessage } from "../types";
@@ -72,6 +73,7 @@ export default function DesignBridgeAfrica() {
   // Navigation controller
   const [activeTab, setActiveTab ] = useState<string>("home");
   const [clientHasAlerts, setClientHasAlerts] = useState(true);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [selectedDesigner, setSelectedDesigner] = useState<Designer | null>(null);
   const [chatDesigner, setChatDesigner] = useState<Designer | null>(null);
 
@@ -175,7 +177,7 @@ export default function DesignBridgeAfrica() {
   };
 
   return (
-    <div id="view-layer-wrapper" className="min-h-screen bg-[#0d0c1d] relative text-slate-300 pb-24 lg:pb-16">
+    <div id="view-layer-wrapper" className="min-h-screen bg-[#0d0c1d] relative text-slate-300 pb-24 lg:pb-16 overflow-x-hidden w-full">
       
       {/* Decorative Light Elements */}
       <div className="absolute top-0 left-0 w-[400px] h-[400px] rounded-full bg-[#5b4dff]/5 blur-[120px] pointer-events-none" />
@@ -508,11 +510,11 @@ export default function DesignBridgeAfrica() {
 
       {/* Mobile Bottom Navigation Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-[#090818]/95 backdrop-blur-xl border-t border-slate-900 shadow-2xl py-1 px-0.5 pb-[calc(4px+env(safe-area-inset-bottom,0px))]">
-        <div className={`grid ${user ? "grid-cols-6" : "grid-cols-5"} w-full max-w-md mx-auto items-center justify-items-center gap-0.5`}>
+        <div className={`grid ${user ? "grid-cols-5" : "grid-cols-4"} w-full max-w-md mx-auto items-center justify-items-center gap-0.5`}>
           
           {/* Home Tab */}
           <button 
-            onClick={() => { setActiveTab("home"); setSelectedDesigner(null); }}
+            onClick={() => { setActiveTab("home"); setSelectedDesigner(null); setShowMoreMenu(false); }}
             className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "home" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
           >
             <Home className="w-[18px] h-[18px]" />
@@ -522,7 +524,7 @@ export default function DesignBridgeAfrica() {
           {/* Dashboard Tab (for logged in) */}
           {user && (
             <button 
-              onClick={() => { setActiveTab("dashboard"); setSelectedDesigner(null); }}
+              onClick={() => { setActiveTab("dashboard"); setSelectedDesigner(null); setShowMoreMenu(false); }}
               className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "dashboard" ? "text-white font-black animate-pulse" : "text-slate-500 hover:text-slate-300"}`}
             >
               <div className="relative">
@@ -537,7 +539,7 @@ export default function DesignBridgeAfrica() {
  
           {/* Designers Tab */}
           <button 
-            onClick={() => { setActiveTab("designers"); setSelectedDesigner(null); }}
+            onClick={() => { setActiveTab("designers"); setSelectedDesigner(null); setShowMoreMenu(false); }}
             className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "designers" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
           >
             <Compass className="w-[18px] h-[18px]" />
@@ -546,33 +548,156 @@ export default function DesignBridgeAfrica() {
  
           {/* Services/Deliverables Tab */}
           <button 
-            onClick={() => { setActiveTab("services"); setSelectedDesigner(null); }}
+            onClick={() => { setActiveTab("services"); setSelectedDesigner(null); setShowMoreMenu(false); }}
             className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "services" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
           >
             <Package className="w-[18px] h-[18px]" />
             <span className="text-[8px] min-[365px]:text-[8.5px] font-bold tracking-tight whitespace-nowrap">Services</span>
           </button>
  
-          {/* Briefs Tab */}
+          {/* More Menu Drawer Trigger */}
           <button 
-            onClick={() => { setActiveTab("jobs"); setSelectedDesigner(null); }}
-            className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "jobs" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
+            onClick={() => { setShowMoreMenu(!showMoreMenu); }}
+            className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${showMoreMenu ? "text-[#8e6fff] font-bold animate-pulse" : "text-slate-500 hover:text-slate-300"}`}
           >
-            <Briefcase className="w-[18px] h-[18px]" />
-            <span className="text-[8px] min-[365px]:text-[8.5px] font-bold tracking-tight whitespace-nowrap">Briefs</span>
-          </button>
- 
-          {/* Collab Tab */}
-          <button 
-            onClick={() => { setActiveTab("messaging"); setSelectedDesigner(null); }}
-            className={`flex flex-col items-center justify-center gap-0.5 py-1 px-px rounded-xl transition-all cursor-pointer bg-transparent border-none focus:outline-none w-full ${activeTab === "messaging" ? "text-white" : "text-slate-500 hover:text-slate-300"}`}
-          >
-            <MessageSquare className="w-[18px] h-[18px]" />
-            <span className="text-[8px] min-[365px]:text-[8.5px] font-bold tracking-tight whitespace-nowrap">Collab</span>
+            <Menu className="w-[18px] h-[18px]" />
+            <span className="text-[8px] min-[365px]:text-[8.5px] font-bold tracking-tight whitespace-nowrap">More</span>
           </button>
  
         </div>
       </div>
+
+      {/* Native-style Drawer Overlay & Backdrop Sheet */}
+      <AnimatePresence>
+        {showMoreMenu && (
+          <>
+            {/* Dark Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowMoreMenu(false)}
+              className="fixed inset-0 bg-[#04040c]/80 backdrop-blur-sm z-[90] lg:hidden"
+            />
+            
+            {/* Drawer Sheet */}
+            <motion.div
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 220 }}
+              className="fixed bottom-0 left-0 right-0 bg-[#0c0b1e]/98 border-t border-slate-900 rounded-t-[32px] p-6 pb-8 z-[100] lg:hidden shadow-[0_-15px_40px_rgba(0,0,0,0.8)] max-h-[85vh] overflow-y-auto"
+            >
+              {/* iOS-style Swipe/Drag Handle Accent */}
+              <div className="w-12 h-1 bg-slate-800 rounded-full mx-auto mb-6" />
+              
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-sm font-black text-white tracking-tight">Ecosystem Explorer</h3>
+                  <p className="text-[10px] text-slate-400 font-semibold">Access extra system dashboards and coordination zones.</p>
+                </div>
+                <button 
+                  onClick={() => setShowMoreMenu(false)}
+                  className="w-8 h-8 rounded-full bg-slate-950 border border-slate-900 flex items-center justify-center text-slate-400 hover:text-white cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Grouped menu options lists */}
+              <div className="space-y-3.5">
+                {/* 1. Briefs (Jobs) */}
+                <button
+                  onClick={() => {
+                    setActiveTab("jobs");
+                    setSelectedDesigner(null);
+                    setShowMoreMenu(false);
+                  }}
+                  className={`flex items-center gap-4 w-full p-4 rounded-2xl bg-slate-950/60 border hover:border-[#5b4dff]/40 transition-all text-left cursor-pointer ${activeTab === "jobs" ? "border-[#5b4dff] bg-[#5b4dff]/5" : "border-slate-900"}`}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 shrink-0">
+                    <Briefcase className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-black text-white">Project Briefs Board</div>
+                    <div className="text-[10px] text-slate-400 truncate">Sponsor custom job briefs, view budgets & screen applications.</div>
+                  </div>
+                  <span className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-full ${activeTab === "jobs" ? "bg-[#5b4dff]/20 text-[#8e6fff]" : "bg-slate-900 text-slate-500"}`}>
+                    Active
+                  </span>
+                </button>
+
+                {/* 2. Collab messaging */}
+                <button
+                  onClick={() => {
+                    setActiveTab("messaging");
+                    setSelectedDesigner(null);
+                    setShowMoreMenu(false);
+                  }}
+                  className={`flex items-center gap-4 w-full p-4 rounded-2xl bg-slate-950/60 border hover:border-[#5b4dff]/40 transition-all text-left cursor-pointer ${activeTab === "messaging" ? "border-[#5b4dff] bg-[#5b4dff]/5" : "border-slate-900"}`}
+                >
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                    <MessageSquare className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs font-black text-white">Collaboration Chatroom</div>
+                    <div className="text-[10px] text-slate-400 truncate">Exchange mockups, coordinate milestones, launch interactive whiteboards.</div>
+                  </div>
+                  <span className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-full ${activeTab === "messaging" ? "bg-emerald-500/20 text-emerald-400" : "bg-slate-900 text-slate-500"}`}>
+                    Live
+                  </span>
+                </button>
+
+                {/* 3. Escrow & Invoices (Visible to all logged in) */}
+                {user && (
+                  <button
+                    onClick={() => {
+                      setActiveTab("invoicing");
+                      setSelectedDesigner(null);
+                      setShowMoreMenu(false);
+                    }}
+                    className={`flex items-center gap-4 w-full p-4 rounded-2xl bg-slate-950/60 border hover:border-[#5b4dff]/40 transition-all text-left cursor-pointer ${activeTab === "invoicing" ? "border-[#5b4dff] bg-[#5b4dff]/5" : "border-slate-900"}`}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0">
+                      <Coins className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-black text-white">Escrow, Disputes & Invoicing</div>
+                      <div className="text-[10px] text-slate-400 truncate">Check secure funding deposits, release milestone approvals, view history.</div>
+                    </div>
+                    <span className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-full ${activeTab === "invoicing" ? "bg-amber-500/20 text-amber-400" : "bg-slate-900 text-slate-500"}`}>
+                      Secured
+                    </span>
+                  </button>
+                )}
+
+                {/* 4. Admin Validation Center (Admin role only) */}
+                {user && userRole === "Admin" && (
+                  <button
+                    onClick={() => {
+                      setActiveTab("admin");
+                      setSelectedDesigner(null);
+                      setShowMoreMenu(false);
+                    }}
+                    className={`flex items-center gap-4 w-full p-4 rounded-2xl bg-slate-950/60 border hover:border-[#5b4dff]/40 transition-all text-left cursor-pointer ${activeTab === "admin" ? "border-[#5b4dff] bg-[#5b4dff]/5" : "border-slate-900"}`}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 shrink-0">
+                      <ShieldAlert className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-black text-white">Admin Vetting & Compliance</div>
+                      <div className="text-[10px] text-slate-400 truncate">Verify government ID registries and review raw creative applications.</div>
+                    </div>
+                    <span className="text-[9px] font-black font-mono bg-red-500/15 text-red-400 px-2.5 py-0.5 rounded-full shrink-0">
+                      Admin Mode
+                    </span>
+                  </button>
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
     </div>
   );
